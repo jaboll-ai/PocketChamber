@@ -1,0 +1,14 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "pocketchamber:block/stasis_chamber_encasing"
+      }
+    },
+    {
+      "apply": {
+        "model": "pocketchamber:block/stasis_chamber_infill"
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "pocketchamber:block/stasis_chamber" }
+  }
+}
