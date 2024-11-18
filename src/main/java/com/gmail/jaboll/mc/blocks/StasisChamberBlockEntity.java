@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -29,11 +30,19 @@ public class StasisChamberBlockEntity extends BlockEntity {
             this.setComponents(DataComponentMap.builder().set(PLAYER_ID_COMPONENT, ply.getUUID().toString()).build());
             this.setChanged();
             if (this.level != null){
-                this.level.markAndNotifyBlock(this.getBlockPos(), this.level.getChunkAt(getBlockPos()), this.getBlockState(), this.getBlockState(), 3, 0);
+                this.level.markAndNotifyBlock(this.getBlockPos(), this.level.getChunkAt(getBlockPos()), this.getBlockState(), this.getBlockState(), 2, 0);
             }
             return true;
         }
         return false;
+    }
+
+    public void removePlayerInside(){
+        this.setComponents(DataComponentMap.EMPTY);
+        this.setChanged();
+        if (this.level != null){
+            this.level.markAndNotifyBlock(this.getBlockPos(), this.level.getChunkAt(getBlockPos()), this.getBlockState(), this.getBlockState(), 2, 0);
+        }
     }
 
     public boolean hasPlayerInside(){

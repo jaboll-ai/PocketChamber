@@ -1,7 +1,7 @@
 package com.gmail.jaboll.mc.blocks;
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -68,27 +68,39 @@ public class StasisChamberBlock extends Block implements EntityBlock {
             if (be instanceof StasisChamberBlockEntity scblockentity){
                 if (!scblockentity.hasPlayerInside()) return super.useWithoutItem(state, level, pos, player, hitResult);
                 Player thrower = level.getPlayerByUUID(UUID.fromString(scblockentity.getPlayerInside()));
-                if (thrower == null) return super.useWithoutItem(state, level, pos, player, hitResult);
+                if (thrower == null){
+                    player.displayClientMessage(Component.translatable("chat.pocketchamber.playerunavailable"), true);
+                    return super.useWithoutItem(state, level, pos, player, hitResult);
+                }
                 thrower.teleportTo(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5);
+                level.playSound(thrower, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 0.9F, 1F);
+                if(!player.isCreative()) scblockentity.removePlayerInside();
             }
         }
         if (level.getBlockEntity(pos) instanceof StasisChamberBlockEntity scblockentity) {
             if (!scblockentity.hasPlayerInside()) return super.useWithoutItem(state, level, pos, player, hitResult);
             Player thrower = level.getPlayerByUUID(UUID.fromString(scblockentity.getPlayerInside()));
-            if (thrower == null) return super.useWithoutItem(state, level, pos, player, hitResult);
+            if (thrower == null){
+                return super.useWithoutItem(state, level, pos, player, hitResult);
+            }
             level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(),
                     SoundEvents.ENDERMAN_TELEPORT,
                     SoundSource.BLOCKS,
                     0.9F,
                     1F,
                     false);
+            if(!player.isCreative()) scblockentity.removePlayerInside();
         }
         return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        level.addParticle(STASIS_CHAMBER_PARTICLE.get(), pos.getX()+0.5, pos.getY()+0.7, pos.getZ()+0.5, 0, 0.2, 0);
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof StasisChamberBlockEntity stasisChamberBlockEntity) {
+            if (!stasisChamberBlockEntity.hasPlayerInside()) return;
+        }
+        level.addParticle(STASIS_CHAMBER_PARTICLE.get(), pos.getX()+0.5, pos.getY()+0.2, pos.getZ()+0.5, 0, 0.4, 0);
         if (random.nextInt(3) == 0) {
             level.playLocalSound(
                     pos.getX()+0.5,
