@@ -65,28 +65,29 @@ public class StasisChamberBlock extends Block implements EntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof StasisChamberBlockEntity scblockentity) {
-            if (!scblockentity.hasPlayerInside()) return super.useWithoutItem(state, level, pos, player, hitResult);
-            if (!level.isClientSide()) {
-                Player thrower = level.getPlayerByUUID(UUID.fromString(scblockentity.getPlayerInside()));
-                if (thrower == null) {
-                    player.displayClientMessage(Component.translatable("chat.pocketchamber.playerunavailable"), true);
-                    return super.useWithoutItem(state, level, pos, player, hitResult);
+            if (scblockentity.hasPlayerInside()) {
+                if (!level.isClientSide()) {
+                    Player thrower = level.getPlayerByUUID(scblockentity.getPlayerInside().gameProfile().getId());
+                    if (thrower == null) {
+                        player.displayClientMessage(Component.translatable("chat.pocketchamber.playerunavailable"), true);
+                        return super.useWithoutItem(state, level, pos, player, hitResult);
+                    }
+                    thrower.teleportTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
+                    level.playSound(thrower, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 0.9F, 1F);
+                    if (!player.isCreative()) scblockentity.removePlayerInside();
+                } else {
+                    Player thrower = level.getPlayerByUUID(scblockentity.getPlayerInside().gameProfile().getId());
+                    if (thrower == null) {
+                        return super.useWithoutItem(state, level, pos, player, hitResult);
+                    }
+                    level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(),
+                            SoundEvents.ENDERMAN_TELEPORT,
+                            SoundSource.BLOCKS,
+                            0.9F,
+                            1F,
+                            false);
+                    if (!player.isCreative()) scblockentity.removePlayerInside();
                 }
-                thrower.teleportTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
-                level.playSound(thrower, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 0.9F, 1F);
-                if (!player.isCreative()) scblockentity.removePlayerInside();
-            } else {
-                Player thrower = level.getPlayerByUUID(UUID.fromString(scblockentity.getPlayerInside()));
-                if (thrower == null) {
-                    return super.useWithoutItem(state, level, pos, player, hitResult);
-                }
-                level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(),
-                        SoundEvents.ENDERMAN_TELEPORT,
-                        SoundSource.BLOCKS,
-                        0.9F,
-                        1F,
-                        false);
-                if (!player.isCreative()) scblockentity.removePlayerInside();
             }
         }
         return super.useWithoutItem(state, level, pos, player, hitResult);
