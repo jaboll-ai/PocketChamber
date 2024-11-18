@@ -6,7 +6,6 @@
 		"1": "minecraft:block/water_still",
 		"particle": "pocketchamber:block/stasis_chamber"
 	},
-	"render_type": "translucent",
 	"elements": [
 		{
 			"from": [2, 0, 2],

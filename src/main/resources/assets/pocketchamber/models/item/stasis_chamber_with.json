@@ -1,4 +1,5 @@
-{   "parent": "block/block",
+{
+  "parent": "block/block",
   "display": {
     "gui": {
       "rotation": [ 30, 135, 0 ],
@@ -15,7 +16,7 @@
   "textures": {
     "0": "pocketchamber:block/stasis_chamber",
     "1": "minecraft:block/water_still",
-    "2": "minecraft:ender_pearl",
+    "2": "minecraft:item/ender_pearl",
     "particle": "pocketchamber:block/stasis_chamber"
   },
   "elements": [

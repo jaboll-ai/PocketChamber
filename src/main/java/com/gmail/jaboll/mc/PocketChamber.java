@@ -112,12 +112,12 @@ public class PocketChamber {
         public static void onClientSetup(FMLClientSetupEvent event)
         {
             event.enqueueWork(() -> {
-                    ItemProperties.register(
-                            STASIS_CHAMBER_ITEM.get(),
-                            ResourceLocation.fromNamespaceAndPath("pocketchamber", "playerinside"),
-                            (stack, level, player, seed) -> stack.getComponents().get(PLAYER_ID_COMPONENT.get()) == null ? 0 : 1
-                    );
-    });
+                ItemProperties.register(
+                    STASIS_CHAMBER_ITEM.get(),
+                    ResourceLocation.fromNamespaceAndPath(MODID, "playerinside"),
+                    (stack, level, player, seed) -> stack.getComponents().getOrDefault(PLAYER_ID_COMPONENT.get(), "").isEmpty() ? 0 : 1
+                );
+            });
         }
         @SubscribeEvent
         public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event){
