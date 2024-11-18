@@ -94,5 +94,13 @@
         "down": {"uv": [0, 0, 16, 16], "texture": "#1", "tintindex":0}
       }
     }
+  ],
+  "overrides":  [
+    {
+      "predicate": {
+        "playerinside": 1
+      },
+      "model": "pocketchamber:item/stasis_chamber_with"
+    }
   ]
 }

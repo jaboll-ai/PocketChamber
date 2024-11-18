@@ -6,13 +6,18 @@ import com.gmail.jaboll.mc.blocks.particle.PocketChamberParticleProvider;
 import com.gmail.jaboll.mc.client.StasisChamberBlockEntityRenderer;
 import com.gmail.jaboll.mc.event.PCProjectileImpact;
 import com.mojang.serialization.Codec;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.internal.NeoForgeItemTagsProvider;
 import net.neoforged.neoforge.registries.*;
 import org.slf4j.Logger;
 
@@ -98,7 +103,6 @@ public class PocketChamber {
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -107,7 +111,13 @@ public class PocketChamber {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-
+            event.enqueueWork(() -> {
+                    ItemProperties.register(
+                            STASIS_CHAMBER_ITEM.get(),
+                            ResourceLocation.fromNamespaceAndPath("pocketchamber", "playerinside"),
+                            (stack, level, player, seed) -> stack.getComponents().get(PLAYER_ID_COMPONENT.get()) == null ? 0 : 1
+                    );
+    });
         }
         @SubscribeEvent
         public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event){

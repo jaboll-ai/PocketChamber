@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "# #",
+        "#W#",
+        "#S#"
+    ],
+    "key": {
+        "#": "#c:glass_blocks/cheap",
+        "W": "minecraft:water_bucket",
+        "S": "#minecraft:soul_fire_base_blocks"
+    },
+    "result": {
+        "id": "pocketchamber:stasis_chamber",
+        "count": 1
+    }
+}
