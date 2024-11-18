@@ -29,7 +29,6 @@ public class StasisChamberBlockEntity extends BlockEntity {
             this.setComponents(DataComponentMap.builder().set(PLAYER_ID_COMPONENT, ply.getUUID().toString()).build());
             this.setChanged();
             if (this.level != null){
-                LOGGER.debug("send update");
                 this.level.markAndNotifyBlock(this.getBlockPos(), this.level.getChunkAt(getBlockPos()), this.getBlockState(), this.getBlockState(), 3, 0);
             }
             return true;
@@ -48,5 +47,10 @@ public class StasisChamberBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return saveWithoutMetadata(registries);
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

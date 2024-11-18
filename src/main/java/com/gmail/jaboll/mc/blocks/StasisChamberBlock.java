@@ -12,11 +12,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.slf4j.Logger;
@@ -99,5 +101,16 @@ public class StasisChamberBlock extends Block implements EntityBlock {
                     false
             );
         }
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof StasisChamberBlockEntity stasisChamberBlockEntity){
+            ItemStack stack = new ItemStack(this);
+            stack.applyComponents(stasisChamberBlockEntity.components());
+            return stack;
+        }
+        return super.getCloneItemStack(state, target, level, pos, player);
     }
 }
