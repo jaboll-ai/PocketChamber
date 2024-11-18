@@ -2,22 +2,20 @@ package com.gmail.jaboll.mc;
 
 import com.gmail.jaboll.mc.blocks.StasisChamberBlock;
 import com.gmail.jaboll.mc.blocks.StasisChamberBlockEntity;
+import com.gmail.jaboll.mc.blocks.StasisChamberBlockItem;
 import com.gmail.jaboll.mc.blocks.particle.PocketChamberParticleProvider;
 import com.gmail.jaboll.mc.client.StasisChamberBlockEntityRenderer;
 import com.gmail.jaboll.mc.event.PCProjectileImpact;
-import com.mojang.serialization.Codec;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.internal.NeoForgeItemTagsProvider;
 import net.neoforged.neoforge.registries.*;
 import org.slf4j.Logger;
 
@@ -62,11 +60,10 @@ public class PocketChamber {
     public static final Supplier<BlockEntityType<StasisChamberBlockEntity>> STASIS_CHAMBER_BE = BLOCK_ENTITIES.register("stasis_chamber_be",
             () -> new BlockEntityType<>(StasisChamberBlockEntity::new, STASIS_CHAMBER.get()));
     //Components
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>>  PLAYER_ID_COMPONENT = DATA_COMPONENTS.registerComponentType("player_inside",
-            builder -> builder.persistent(Codec.STRING));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ResolvableProfile>> PLAYER_PROFILE_COMPONENT = DATA_COMPONENTS.registerComponentType("player_inside",
+            builder -> builder.persistent(ResolvableProfile.CODEC).networkSynchronized(ResolvableProfile.STREAM_CODEC));
     //ITEMS
-    public static final DeferredItem<BlockItem> STASIS_CHAMBER_ITEM = ITEMS.registerItem("stasis_chamber",
-            properties -> new BlockItem(STASIS_CHAMBER.get(), properties.component(PLAYER_ID_COMPONENT, "")));
+    public static final DeferredItem<BlockItem> STASIS_CHAMBER_ITEM = ITEMS.registerItem("stasis_chamber", StasisChamberBlockItem::new);
     //Particles
     public static final Supplier<SimpleParticleType> STASIS_CHAMBER_PARTICLE = PARTICLES.register("stasis_chamber_particle",
             ()-> new SimpleParticleType(false));
@@ -115,7 +112,7 @@ public class PocketChamber {
                 ItemProperties.register(
                     STASIS_CHAMBER_ITEM.get(),
                     ResourceLocation.fromNamespaceAndPath(MODID, "playerinside"),
-                    (stack, level, player, seed) -> stack.getComponents().getOrDefault(PLAYER_ID_COMPONENT.get(), "").isEmpty() ? 0 : 1
+                    (stack, level, player, seed) -> stack.getComponents().get(PLAYER_PROFILE_COMPONENT.get()) == null ? 0 : 1
                 );
             });
         }
