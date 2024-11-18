@@ -1,6 +1,11 @@
 package com.gmail.jaboll.mc.blocks;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +17,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.slf4j.Logger;
@@ -60,18 +64,40 @@ public class StasisChamberBlock extends Block implements EntityBlock {
         if(!level.isClientSide()){
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof StasisChamberBlockEntity scblockentity){
-                if (!scblockentity.hasPlayerInside()) {
-                    return super.useWithoutItem(state, level, pos, player, hitResult);
-                }
+                if (!scblockentity.hasPlayerInside()) return super.useWithoutItem(state, level, pos, player, hitResult);
                 Player thrower = level.getPlayerByUUID(UUID.fromString(scblockentity.getPlayerInside()));
-                if (thrower != null){
-                    Vec2 rot = thrower.getRotationVector();
-                    thrower.moveTo(pos.getX(), pos.getY()+1, pos.getZ(), rot.y, rot.x);
-                }
+                if (thrower == null) return super.useWithoutItem(state, level, pos, player, hitResult);
+                thrower.teleportTo(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5);
             }
+        }
+        if (level.getBlockEntity(pos) instanceof StasisChamberBlockEntity scblockentity) {
+            if (!scblockentity.hasPlayerInside()) return super.useWithoutItem(state, level, pos, player, hitResult);
+            Player thrower = level.getPlayerByUUID(UUID.fromString(scblockentity.getPlayerInside()));
+            if (thrower == null) return super.useWithoutItem(state, level, pos, player, hitResult);
+            level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(),
+                    SoundEvents.ENDERMAN_TELEPORT,
+                    SoundSource.BLOCKS,
+                    0.9F,
+                    1F,
+                    false);
         }
         return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
-
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        level.addParticle(STASIS_CHAMBER_PARTICLE.get(), pos.getX()+0.5, pos.getY()+0.7, pos.getZ()+0.5, 0, 0.2, 0);
+        if (random.nextInt(3) == 0) {
+            level.playLocalSound(
+                    pos.getX()+0.5,
+                    pos.getY()+0.7,
+                    pos.getZ()+0.5,
+                    SoundEvents.GENERIC_SPLASH,
+                    SoundSource.BLOCKS,
+                    0.015F + random.nextFloat() * 0.05F,
+                    0.9F + random.nextFloat() * 0.15F,
+                    false
+            );
+        }
+    }
 }
