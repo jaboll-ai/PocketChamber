@@ -2,22 +2,22 @@ package com.gmail.jaboll.mc.client;
 
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import com.gmail.jaboll.mc.blocks.particle.PocketChamberParticleProvider;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static com.gmail.jaboll.mc.PocketChamber.*;
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class Client {
-    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, MODID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MODID);
 
 
 
@@ -27,8 +27,8 @@ public class Client {
         event.enqueueWork(() -> {
             ItemProperties.register(
                     STASIS_CHAMBER_ITEM.get(),
-                    ResourceLocation.fromNamespaceAndPath(MODID, "playerinside"),
-                    (stack, level, player, seed) -> stack.getComponents().get(PLAYER_PROFILE_COMPONENT.get()) == null ? 0 : 1
+                    new ResourceLocation(MODID, "playerinside"),
+                    (stack, level, player, seed) -> stack.getOrCreateTag().contains("playerID") ? 1 : 0
             );
         });
     }

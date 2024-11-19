@@ -3,14 +3,12 @@ package com.gmail.jaboll.mc.event;
 import com.gmail.jaboll.mc.PocketChamber;
 import com.gmail.jaboll.mc.blocks.StasisChamberBlockEntity;
 import com.mojang.logging.LogUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import org.slf4j.Logger;
 
 
@@ -32,7 +30,7 @@ public class PCProjectileImpact {
                     return; // Return early to not cancel [only cancels if someone is already inside the sc]
                 }
                 evt.getEntity().discard();
-                evt.setCanceled(true);
+                evt.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
             }
         }
     }
