@@ -1,5 +1,7 @@
 package com.gmail.jaboll.mc.blocks;
+import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -69,7 +71,8 @@ public class StasisChamberBlock extends Block implements EntityBlock {
         if (be instanceof StasisChamberBlockEntity scblockentity) {
             if (scblockentity.hasPlayerInside()) {
                 if (!level.isClientSide()) {
-                    Player thrower = level.getServer().getPlayerList().getPlayer(scblockentity.getPlayerInside().gameProfile().getId());
+                    GameProfile gameProfile = scblockentity.getPlayerInside().gameProfile();
+                    Player thrower = level.getServer().getPlayerList().getPlayer(gameProfile.getId());
                     if (thrower != null) {
                         if (thrower.level() == level){
                             thrower.teleportTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
@@ -77,7 +80,8 @@ public class StasisChamberBlock extends Block implements EntityBlock {
                         else thrower.teleportTo((ServerLevel) level, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, Set.of(), thrower.getYRot(), thrower.getXRot(), true);
                         level.playSound(thrower, pos, SoundEvents.PLAYER_TELEPORT, SoundSource.BLOCKS, 0.9F, 1F);
                         if (!player.isCreative()) scblockentity.removePlayerInside();
-                    }
+                    } else player.displayClientMessage(Component.literal(gameProfile.getName()+" ").withStyle(ChatFormatting.GOLD)
+                            .append(Component.translatable("chat.pocketchamber.playerunavailable").withStyle(ChatFormatting.GRAY)), true);
                 } else {
                     Player thrower = level.getPlayerByUUID(scblockentity.getPlayerInside().gameProfile().getId());
                     if (thrower != null) {

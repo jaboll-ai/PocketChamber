@@ -1,6 +1,6 @@
 {
   "itemGroup.pocketchamber": "Pocket Chamber",
   "item.pocketchamber.stasis_chamber": "Stasis Chamber",
-  "chat.pocketchamber.playerunavailable" : "This player is currently unavailable",
+  "chat.pocketchamber.playerunavailable" : "is currently unavailable",
   "tooltip.pocketchamber.playerinside" : "Occupied by"
 }
