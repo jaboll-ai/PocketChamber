@@ -49,7 +49,7 @@ public class PocketChamber {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, PocketChamber.MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-    public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, "pocketchamber");
+    public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents("pocketchamber");
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, MODID);
 
 
@@ -58,7 +58,7 @@ public class PocketChamber {
             StasisChamberBlock::new, BlockBehaviour.Properties.of().strength(0.5f).noOcclusion());
     //BE
     public static final Supplier<BlockEntityType<StasisChamberBlockEntity>> STASIS_CHAMBER_BE = BLOCK_ENTITIES.register("stasis_chamber_be",
-            () -> new BlockEntityType<>(StasisChamberBlockEntity::new, STASIS_CHAMBER.get()));
+            () -> BlockEntityType.Builder.of(StasisChamberBlockEntity::new, STASIS_CHAMBER.get()).build(null));
     //Components
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ResolvableProfile>> PLAYER_PROFILE_COMPONENT = DATA_COMPONENTS.registerComponentType("player_inside",
             builder -> builder.persistent(ResolvableProfile.CODEC).networkSynchronized(ResolvableProfile.STREAM_CODEC));
