@@ -1,13 +1,14 @@
 package com.gmail.jaboll.mc.blocks;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Relative;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.slf4j.Logger;
 
-import java.util.UUID;
+import java.util.Set;
 
 import static com.gmail.jaboll.mc.PocketChamber.*;
 
@@ -68,30 +69,25 @@ public class StasisChamberBlock extends Block implements EntityBlock {
         if (be instanceof StasisChamberBlockEntity scblockentity) {
             if (scblockentity.hasPlayerInside()) {
                 if (!level.isClientSide()) {
-                    Player thrower = level.getPlayerByUUID(scblockentity.getPlayerInside().gameProfile().getId());
-                    if (thrower == null) {
-                        player.displayClientMessage(Component.translatable("chat.pocketchamber.playerunavailable"), true);
-                        return super.useWithoutItem(state, level, pos, player, hitResult);
+                    Player thrower = level.getServer().getPlayerList().getPlayer(scblockentity.getPlayerInside().gameProfile().getId());
+                    if (thrower != null) {
+                        if (thrower.level() == level){
+                            thrower.teleportTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
+                        }
+                        else thrower.teleportTo((ServerLevel) level, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, Set.of(), thrower.getYRot(), thrower.getXRot(), true);
+                        level.playSound(thrower, pos, SoundEvents.PLAYER_TELEPORT, SoundSource.BLOCKS, 0.9F, 1F);
+                        if (!player.isCreative()) scblockentity.removePlayerInside();
                     }
-                    thrower.teleportTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
-                    level.playSound(thrower, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 0.9F, 1F);
-                    if (!player.isCreative()) scblockentity.removePlayerInside();
                 } else {
                     Player thrower = level.getPlayerByUUID(scblockentity.getPlayerInside().gameProfile().getId());
-                    if (thrower == null) {
-                        return super.useWithoutItem(state, level, pos, player, hitResult);
+                    if (thrower != null) {
+                        level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.PLAYER_TELEPORT, SoundSource.BLOCKS, 0.9F, 1F, false);
+                        if (!player.isCreative()) scblockentity.removePlayerInside();
                     }
-                    level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(),
-                            SoundEvents.ENDERMAN_TELEPORT,
-                            SoundSource.BLOCKS,
-                            0.9F,
-                            1F,
-                            false);
-                    if (!player.isCreative()) scblockentity.removePlayerInside();
                 }
             }
         }
-        return super.useWithoutItem(state, level, pos, player, hitResult);
+        return InteractionResult.SUCCESS;
     }
 
     @Override

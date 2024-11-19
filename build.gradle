@@ -46,7 +46,9 @@ neoForge {
             client()
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            jvmArgument("-XX:+AllowEnhancedClassRedefinition")
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            getProgramArguments().addAll '--username', 'JaBoll'
         }
 
         client2 {
@@ -54,7 +56,7 @@ neoForge {
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-            getProgramArguments().addAll '--username', 'Dev2'
+            getProgramArguments().addAll '--username', 'Jimmy4'
         }
 
         server {

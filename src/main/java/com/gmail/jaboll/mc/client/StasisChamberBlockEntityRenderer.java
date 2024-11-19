@@ -19,8 +19,6 @@ public class StasisChamberBlockEntityRenderer implements BlockEntityRenderer<Sta
 
     @Override
     public void render(StasisChamberBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-//        this.ctx.getItemRenderer().render(Items.ENDER_PEARL, ItemDisplayContext.GROUND, false, poseStack, packedLight, packedOverlay,
-//                );
         Level lvl = blockEntity.getLevel();
         long tickTime = lvl.getGameTime();
         double yOffset = Math.sin((tickTime+ partialTick)/3)/5 + ((int)((tickTime + partialTick) / 120) % 4) * 0.02;

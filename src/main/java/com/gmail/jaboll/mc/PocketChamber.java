@@ -78,9 +78,7 @@ public class PocketChamber {
                 output.accept(STASIS_CHAMBER_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
             }).build());
 
-    public PocketChamber(IEventBus modEventBus, ModContainer modContainer) {
-        modEventBus.addListener(this::commonSetup);
-
+    public PocketChamber(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         DATA_COMPONENTS.register(modEventBus);
@@ -88,42 +86,7 @@ public class PocketChamber {
         CREATIVE_MODE_TABS.register(modEventBus);
         PARTICLES.register(modEventBus);
 
-        NeoForge.EVENT_BUS.register(this); // not necessary only for below @nnotated fucntions
         NeoForge.EVENT_BUS.addListener(PCProjectileImpact::onProjectileHit);
 
-    }
-
-    private void commonSetup(final FMLCommonSetupEvent event) {
-
-    }
-
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-    }
-
-    // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
-            event.enqueueWork(() -> {
-                ItemProperties.register(
-                    STASIS_CHAMBER_ITEM.get(),
-                    ResourceLocation.fromNamespaceAndPath(MODID, "playerinside"),
-                    (stack, level, player, seed) -> stack.getComponents().get(PLAYER_PROFILE_COMPONENT.get()) == null ? 0 : 1
-                );
-            });
-        }
-        @SubscribeEvent
-        public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event){
-            event.registerBlockEntityRenderer(STASIS_CHAMBER_BE.get(), StasisChamberBlockEntityRenderer::new);
-        }
-
-        @SubscribeEvent
-        public static void registerParticleFactories(RegisterParticleProvidersEvent event){
-            event.registerSpriteSet(STASIS_CHAMBER_PARTICLE.get(), PocketChamberParticleProvider::new);
-        }
     }
 }
