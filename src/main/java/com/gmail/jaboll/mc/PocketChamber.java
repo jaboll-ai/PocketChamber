@@ -4,16 +4,20 @@ import com.gmail.jaboll.mc.blocks.StasisChamberBlock;
 import com.gmail.jaboll.mc.blocks.StasisChamberBlockEntity;
 import com.gmail.jaboll.mc.blocks.StasisChamberBlockItem;
 
+import com.gmail.jaboll.mc.blocks.loot.StasisChamberLootItemFunction;
 import com.gmail.jaboll.mc.event.PCProjectileImpact;
 
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -44,7 +48,7 @@ public class PocketChamber {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, PocketChamber.MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MODID);
-
+    public static final DeferredRegister<LootItemFunctionType> LOOT_FUNCTION_TYPES = DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, MODID);
 
     //BLOCKS
     public static final RegistryObject<StasisChamberBlock> STASIS_CHAMBER = BLOCKS.register("stasis_chamber",
@@ -57,6 +61,9 @@ public class PocketChamber {
     //Particles
     public static final Supplier<SimpleParticleType> STASIS_CHAMBER_PARTICLE = PARTICLES.register("stasis_chamber_particle",
             ()-> new SimpleParticleType(false));
+    //LootFunc
+    public static final Supplier<LootItemFunctionType> COPY_PLAYER_DATA_FUNC =
+            LOOT_FUNCTION_TYPES.register("copy_player_data", () -> new LootItemFunctionType(new StasisChamberLootItemFunction.Serializer()));
 
     public static final RegistryObject<CreativeModeTab> PC_TAB = CREATIVE_MODE_TABS.register(MODID,
             () -> CreativeModeTab.builder()
@@ -73,6 +80,7 @@ public class PocketChamber {
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+        LOOT_FUNCTION_TYPES.register(modEventBus);
         PARTICLES.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.addListener(PCProjectileImpact::onProjectileHit);

@@ -6,6 +6,12 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "pocketchamber:copy_player_data",
+              "source": "block_entity"
+            }
+          ],
           "name": "pocketchamber:stasis_chamber"
         }
       ]

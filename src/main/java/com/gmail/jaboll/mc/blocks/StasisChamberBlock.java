@@ -34,7 +34,6 @@ import java.util.UUID;
 import static com.gmail.jaboll.mc.PocketChamber.*;
 
 public class StasisChamberBlock extends Block implements EntityBlock {
-    private static final Logger LOGGER = LogUtils.getLogger();
     public StasisChamberBlock(Properties properties) {
 		super(properties);
     }
@@ -66,6 +65,7 @@ public class StasisChamberBlock extends Block implements EntityBlock {
             }
 
         }
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
@@ -109,7 +109,6 @@ public class StasisChamberBlock extends Block implements EntityBlock {
         return InteractionResult.SUCCESS;
     }
 
-
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         BlockEntity be = level.getBlockEntity(pos);
@@ -136,7 +135,9 @@ public class StasisChamberBlock extends Block implements EntityBlock {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof StasisChamberBlockEntity stasisChamberBlockEntity){
             ItemStack stack = new ItemStack(STASIS_CHAMBER.get());
-            stack.getOrCreateTag().putString(stasisChamberBlockEntity.getPlayerInside().toString(), stasisChamberBlockEntity.getPlayerName());
+            CompoundTag tag = stack.getOrCreateTag();
+            tag.putString("playerID", stasisChamberBlockEntity.getPlayerInside());
+            tag.putString("playerName", stasisChamberBlockEntity.getPlayerName());
             return stack;
         }
         return super.getCloneItemStack(state, target, level, pos, player);

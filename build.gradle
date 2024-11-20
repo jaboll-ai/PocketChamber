@@ -88,6 +88,13 @@ minecraft {
             jvmArg "-XX:+AllowEnhancedClassRedefinition"
         }
 
+//        client2 {
+//            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+//            property 'forge.enabledGameTestNamespaces', mod_id
+//            jvmArg "-XX:+AllowEnhancedClassRedefinition"
+//            getArgs().addAll '--username', 'Dev2'
+//        }
+
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'

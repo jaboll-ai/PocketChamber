@@ -19,9 +19,9 @@ public class StasisChamberBlockItem extends BlockItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        if(pStack.getTagElement("playerID") != null){
+        if(pStack.getOrCreateTag().contains("playerID")){
             MutableComponent playerInside = Component.translatable("tooltip.pocketchamber.playerinside").withStyle(ChatFormatting.GRAY)
-                    .append( Component.literal(" "+pStack.getTagElement("playerName")).withStyle(ChatFormatting.GOLD));
+                    .append(Component.literal(" "+pStack.getTag().getString("playerName")).withStyle(ChatFormatting.GOLD));
             pTooltip.add(playerInside);
         }
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
