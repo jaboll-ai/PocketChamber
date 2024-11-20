@@ -69,7 +69,7 @@ public class PocketChamber {
             ()-> new SimpleParticleType(false));
 
     // Creates a creative tab with the id "examplemod:example_tab" for the example item, that is placed after the combat tab
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab",
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> PC_TAB = CREATIVE_MODE_TABS.register(MODID,
             () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.pocketchamber")) //The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
