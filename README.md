@@ -1,25 +1,19 @@
+# Take your friends with you
+This mod makes the Stasis Chamber a portable item that you (or your friends) can take with them.
+They went exploring and found a nice place that you need to walk to?
+-> give them a Stasis Chamber with your ender pearl in it and they can take you with them.
 
-Installation information
-=======
+### Craft the Stasis Chamber
+![craft](https://github.com/jaboll-ai/PocketChamber/blob/1.21.3/images/pocket_chamber_crafting.png?raw=true)
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+### Throw an ender pearl at the block to insert your ender pearl into it.
+![insert player with enderpearl](https://github.com/jaboll-ai/PocketChamber/blob/1.21.3/images/stasis_chamber.gif?raw=true)
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+### You can check the item tooltip if the chamber is occupied:
+![tooltip showing enderpearl](https://github.com/jaboll-ai/PocketChamber/blob/1.21.3/images/stasis_chamber_tooltip.png?raw=true)
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+### And then just right-click to teleport them :)
+![player tp](https://github.com/jaboll-ai/PocketChamber/blob/1.21.3/images/stasis_chamber_use.gif?raw=true)
+
